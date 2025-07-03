@@ -1,0 +1,33 @@
+.content {
+  padding: 32px;
+  background-color: #fff8f0; /* fondo suave como crema */
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  margin: 20px;
+  font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+mat-toolbar {
+  position: relative;
+  z-index: 5;
+  background: linear-gradient(to right, #ffb6b9, #ffdde1); /* rosa pastel */
+  color: #2f0b0b; /* marrón pastel/dulce */
+  font-weight: 600;
+  font-size: 20px;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+}
+
+mat-sidenav-container {
+  height: calc(100vh - 64px);
+  background-color: #fff0f5; /* fondo rosado muy claro */
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.titulo {
+  padding-left: 24px;
+  font-size: 26px;
+  font-weight: bold;
+  color: #280a1b; /* rosa fuerte tipo fresa */
+  text-shadow: 1px 1px 2px #ffe1e1;
+}

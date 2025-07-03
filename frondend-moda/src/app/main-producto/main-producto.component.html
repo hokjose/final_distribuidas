@@ -1,0 +1,110 @@
+<p-toast></p-toast>
+<p-button (onClick)="showDialog()" label="CREAR PRODUCTO"></p-button>
+<br><br>
+
+<!-- Buscador -->
+<div class="p-datatable-header" style="width: 100%; padding: 0;">
+  <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center" style="width: 100%; display: flex;">
+    <span class="block mt-2 md:mt-0 p-input-icon-left" style="width: 100%; display: flex;">
+      <i class="pi pi-search"></i>
+      <input pInputText type="text" placeholder="Buscar..." class="p-inputtext" (input)="buscarProductos($event)" style="width: 100%; padding-left: 30px;">
+    </span>
+  </div>
+</div>
+<br>
+
+<!-- Tabla -->
+<div class="card" style="width: 100%;">
+  <p-table [value]="filteredProductos" [style]="{ width: '100%' }">
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Stock</th>
+        <th>Producto</th>
+        <th>Marca</th>
+        <th>Género</th>
+        <th>Color</th>
+        <th>Precio Venta</th>
+        <th>Costo Compra</th>
+        <th>Acciones</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-producto>
+      <tr>
+        <td>{{ producto.stock }}</td>
+        <td>{{ producto.producto }}</td>
+        <td>{{ producto.marca.marca }}</td>
+        <td>{{ producto.genero.genero }}</td>
+        <td>{{ producto.color.color }}</td>
+        <td>{{ producto.precioventa |  currency:'PEN':'symbol':'1.2-2':'es-PE'}}</td>
+        <td>{{ producto.costocompra |  currency:'PEN':'symbol':'1.2-2':'es-PE' }}</td>
+        <td>
+          <p-buttonGroup>
+            <button pButton label="Editar" (click)="showDialog(producto)"></button>
+            <button pButton label="Eliminar" severity="danger" (click)="deleteProducto(producto.id)"></button>
+          </p-buttonGroup>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
+
+<p-dialog header="{{ isEditing ? 'Registro de Producto' : 'Registro de Producto' }}" [(visible)]="visibleDialogForm"
+          [style]="{ width: '40rem' }">
+  <form [formGroup]="productoForm" (ngSubmit)="saveProducto()">
+    <div class="p-fluid">
+      <div class="p-field">
+        <label for="producto">Producto:</label>
+        <input id="producto" pInputText formControlName="producto" />
+        <small *ngIf="productoForm.get('producto')?.invalid && productoForm.get('producto')?.touched"
+               class="p-error">El nombre del producto es obligatorio.</small>
+      </div>
+
+
+      <div class="p-field">
+        <label for="marca">Marca:</label>
+        <p-dropdown [options]="marcas"
+                    optionLabel="marca"
+                    formControlName="marca"
+                    placeholder="Seleccione una Marca"></p-dropdown>
+      </div>
+
+      <div class="p-field">
+        <label for="genero">Género:</label>
+        <p-dropdown
+          formControlName="genero"
+          [options]="generos"
+          optionLabel="genero"
+          placeholder="Seleccione un Género">
+        </p-dropdown>
+      </div>
+
+      <div class="p-field">
+        <label for="color">Color:</label>
+        <p-dropdown
+          formControlName="color"
+          [options]="colores"
+          optionLabel="color"
+          placeholder="Seleccione un Color">
+        </p-dropdown>
+
+      </div>
+
+      <div class="p-field">
+        <label for="stock">Stock:</label>
+        <input id="stock" pInputText type="number" formControlName="stock" />
+      </div>
+
+      <div class="p-field">
+        <label for="precioventa">Precio Venta:</label>
+        <input id="precioventa" pInputText type="number" formControlName="precioventa" />
+      </div>
+
+      <div class="p-field">
+        <label for="costocompra">Costo Compra:</label>
+        <input id="costocompra" pInputText type="number" formControlName="costocompra" />
+      </div>
+    </div>
+    <br>
+    <button pButton type="submit" label="Guardar" [disabled]="productoForm.invalid"></button>
+  </form>
+</p-dialog>

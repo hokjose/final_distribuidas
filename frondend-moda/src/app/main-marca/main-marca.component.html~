@@ -1,0 +1,81 @@
+<p-toast></p-toast>
+<p-confirmDialog></p-confirmDialog>
+
+<div class="flex justify-between items-center mb-4">
+  <h2 class="text-2xl font-semibold">Gestión de Marcas</h2>
+  <p-button icon="pi pi-plus" label="Nueva Marca" class="p-button-success" (onClick)="showDialog()"></p-button>
+</div>
+
+<div class="mb-3">
+  <span class="p-input-icon-left w-full">
+    <i class="pi pi-search"></i>
+    <input type="text" pInputText placeholder="Buscar marca..." [(ngModel)]="searchTerm" class="w-full" />
+  </span>
+</div>
+
+<div class="card shadow-2 border-round p-4">
+  <p-table
+    [value]="filteredMarcas()"
+    [paginator]="true"
+    [rows]="5"
+    [responsiveLayout]="'scroll'"
+    [style]="{ width: '100%' }">
+
+    <ng-template pTemplate="header">
+      <tr>
+        <th style="width: 5%">#</th>
+        <th>Nombre de Marca</th>
+        <th style="width: 20%">Acciones</th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-marca let-i="rowIndex">
+      <tr>
+        <td>{{ i + 1 }}</td>
+        <td>{{ marca.marca }}</td>
+        <td>
+          <div class="flex gap-2">
+            <p-button
+              icon="pi pi-pencil"
+              class="p-button-sm p-button-info"
+              (onClick)="showDialog(marca)">
+            </p-button>
+
+            <p-button
+              icon="pi pi-trash"
+              class="p-button-sm p-button-danger"
+              (onClick)="confirmDeleteMarca(marca.id)">
+            </p-button>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+
+  </p-table>
+</div>
+
+<p-dialog
+  header="{{ isEditing ? 'Editar Marca' : 'Nueva Marca' }}"
+  [(visible)]="visibleDialogForm"
+  [style]="{ width: '30rem' }"
+  [modal]="true"
+  [closable]="false"
+  [draggable]="false">
+
+  <form [formGroup]="marcaForm" (ngSubmit)="saveMarca()">
+    <div class="p-fluid">
+      <div class="field mb-3">
+        <label for="marca" class="font-semibold">Nombre de la Marca</label>
+        <input id="marca" pInputText formControlName="marca" />
+        <small *ngIf="marcaForm.get('marca')?.invalid && marcaForm.get('marca')?.touched" class="p-error">
+          El nombre de la marca es obligatorio.
+        </small>
+      </div>
+    </div>
+
+    <div class="flex justify-end gap-2 mt-4">
+      <p-button label="Cancelar" class="p-button-secondary" (onClick)="visibleDialogForm = false" type="button"></p-button>
+      <p-button label="Guardar" class="p-button-primary" type="submit" [disabled]="marcaForm.invalid"></p-button>
+    </div>
+  </form>
+</p-dialog>

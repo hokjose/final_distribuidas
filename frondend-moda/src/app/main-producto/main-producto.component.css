@@ -1,0 +1,16 @@
+/* Asegurarse de que el contenedor ocupe todo el ancho */
+.p-datatable-header {
+  width: 100%;
+  padding: 0;
+}
+
+/* Hacer que el contenedor y el input ocupen todo el ancho */
+.p-datatable-header .p-input-icon-left {
+  width: 100%;
+  display: flex;
+}
+
+.p-datatable-header input {
+  width: 100%;
+  padding-left: 30px; /* Espacio para el icono */
+}

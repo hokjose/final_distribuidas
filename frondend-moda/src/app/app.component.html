@@ -1,0 +1,16 @@
+<mat-toolbar class="mat-elevation-z8">
+  <button mat-icon-button (click)="collapsed.set(!collapsed())">
+    <mat-icon style="scale: 1.5">reorder</mat-icon>
+  </button>
+  <p class="titulo">tienda de pasteleria jossech</p>
+</mat-toolbar>
+
+<mat-sidenav-container>
+  <mat-sidenav opened mode="side" [style.width]="sidenavWidth()" >
+    <app-cashbox-sidenav/>
+  </mat-sidenav>
+  <mat-sidenav-content class="content" [style.margin-left]="sidenavWidth()" style="background: #ececec">
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
+</mat-sidenav-container>
+

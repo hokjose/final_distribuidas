@@ -1,0 +1,186 @@
+<p-card [style]="{ width: '100%' }" class="p-mb-4">
+  <div class="search-section" style="display: flex; align-items: center; gap: 1rem;">
+    <div class="p-field" style="flex: 1; display: flex; align-items: center;">
+
+      <label for="dni" style="font-weight: bold; min-width: 80px; margin-right: 0.5rem;">DNI: </label>
+      <div class="p-inputgroup" style="flex: 1;">
+        <span class="p-inputgroup-addon">
+          <i class="pi pi-search"></i>
+        </span>
+        <input id="dni" pInputText [(ngModel)]="searchDni" (input)="onSearch()" placeholder="Ingrese el DNI"
+               style="width: 100%;"
+        />
+      </div>
+
+    </div>
+    <div class="p-field" style="flex: 1; display: flex; align-items: center;">
+      <label for="customerName" style="font-weight: bold; min-width: 80px; margin-right: 0.5rem;">Cliente:</label>
+      <input id="customerName" pInputText [value]="form.get('nombre')?.value || ''" readonly
+             style="flex: 1; width: 100%;"
+      />
+    </div>
+  </div>
+
+</p-card>
+
+
+<br>   <!-- -------------------PRODCUCTOS------------------ -->
+<p-card [style]="{ width: '100%' }">
+  <div class="p-datatable-header" style="margin-bottom: 1rem;">
+    <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
+      <span class="block mt-2 md:mt-0 p-input-icon-left" style="width: 100%; max-width: 400px;">
+        <i class="pi pi-search"></i>
+        <input
+          pInputText
+          type="text"
+          placeholder="Buscar Productos..."
+          class="p-inputtext w-full sm:w-auto"
+          (input)="buscarProductos($event)"
+        />
+      </span>
+    </div>
+  </div>
+
+  <div class="card" style="width: 100%; height: 120px; overflow-y: auto;">
+    <p-table [value]="filteredProductos" [style]="{ width: '100%' }">
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Stock</th>
+          <th>Producto</th>
+          <th>Marca</th>
+          <th>Género</th>
+          <th>Color</th>
+          <th>Precio Unit.</th>
+          <th></th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-producto>
+        <tr>
+          <td>{{ producto.stock }}</td>
+          <td>{{ producto.producto }}</td>
+          <td>{{ producto.marca?.marca }}</td>
+          <td>{{ producto.genero?.genero }}</td>
+          <td>{{ producto.color?.color }}</td>
+          <td>{{ producto.precioventa | currency:'PEN':'symbol':'1.2-2':'es-PE' }}</td>
+          <td>
+            <button
+              type="button"
+              pButton
+              pRipple
+              icon="pi pi-plus"
+              (click)="seleccionarProducto(producto)"
+            ></button>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="8">{{ mensajeTabla }}</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</p-card>
+<br>
+
+<!-- -----------------------------------------------------CARRITO -->
+<p-card class="carrito">
+  <h3>Carrito</h3>
+  <br>
+  <div *ngIf="carrito.length > 0; else emptyCart">
+    <!-- Campo de búsqueda -->
+    <div style="margin-bottom: 20px;">
+      <input type="text" [(ngModel)]="searchTerm" (input)="filterCarrito()" placeholder="Buscar producto en carrito" />
+
+    </div>
+
+    <table style="width: 100%; border-collapse: collapse;">
+      <thead>
+      <tr>
+        <th>Producto</th>
+        <th>Stock</th>
+        <th>Marca</th>
+        <th>Género</th>
+        <th>Color</th>
+        <th>Precio</th>
+        <th>Cantidad</th>
+        <th>Importe</th>
+        <th>Acciones</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let item of filteredCarrito">
+        <td>{{ item.producto }}</td>
+        <td>{{ item.stock }}</td>
+        <td>{{ item.marca?.marca }}</td>
+        <td>{{ item.genero?.genero }}</td>
+        <td>{{ item.color?.color }}</td>
+        <td>{{ item.precioventa | currency:'PEN':'symbol':'1.2-2':'es-PE' }}</td>
+        <td>
+          <div style="display: flex; align-items: center; gap: 5px;">
+            <button
+              type="button"
+              pButton
+              icon="pi pi-minus"
+              (click)="ajustarCantidad(item, -1)"
+              [disabled]="item.cantidad <= 0"
+            ></button>
+            <input
+              type="number"
+              [value]="item.cantidad"
+              readonly
+              style="width: 50px; text-align: center;"
+            />
+            <button
+              type="button"
+              pButton
+              icon="pi pi-plus"
+              (click)="ajustarCantidad(item, 1)"
+              [disabled]="item.cantidad >= item.stock"
+            ></button>
+          </div>
+        </td>
+        <td>{{ item.importe | currency:'PEN':'symbol':'1.2-2':'es-PE' }}</td>
+        <td>
+          <button
+            type="button"
+            pButton
+            icon="pi pi-trash"
+            class="p-button-danger"
+            (click)="ajustarCantidad(item, -item.cantidad)"
+          ></button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+
+
+  <ng-template #emptyCart>
+    <p>El carrito está vacío</p>
+  </ng-template>
+  <br>
+  <hr>
+  <br>
+  <p-card>
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+      <div>
+        <h4>OP. Gravada: {{ subtotal | currency:'PEN':'symbol':'1.2-2':'es-PE' }}</h4>
+        <h4>IGV: {{ igv | currency:'PEN':'symbol':'1.2-2':'es-PE' }}</h4>
+        <h4>TOTAL: {{ total | currency:'PEN':'symbol':'1.2-2':'es-PE' }}</h4>
+      </div>
+      <div style="">
+        <p-dropdown [options]="tipoventa" optionLabel="tipoventa" [(ngModel)]="seleccionarTipoVenta"></p-dropdown>
+        <p-dropdown [options]="formapago" optionLabel="formapago" [(ngModel)]="seleccionarFormaPago"></p-dropdown>
+      </div>
+      <div>
+        <p-button label="Cancelar Venta" (click)="cancelarVenta()"></p-button>
+      </div>
+      <div>
+        <p-button label="Generar Venta" (click)="generarVenta()"></p-button>
+      </div>
+    </div>
+  </p-card>
+
+</p-card>
